@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -e
+set -o noclobber
+RED='\033[0;36' 
+
+if
+  [[ "${USER:-}" == "root" ]]
+then
+  echo "Please log in as normal user and try again." >&2
+  exit 1
+fi
+ 
+if [[ $1 == 'rails' ]]
+	then
+
+	sudo echo
+
+	read -p "Install Ruby ? (y/n) : " rb
+	if [[ $rb == 'Y' || $rb == 'y' || $rb == '' ]]
+	then
+		rb=true
+		echo -e '\e[36mRuby will be installed\e[0m' >&2
+	else
+		rb=false
+		echo -e '\e[36mRuby will not be installed\e[0m'
+	fi
+
+	read -p "Install Postgres ? (y/n) : " pg
+	if [[ $pg == 'Y' || $pg == 'y' || $pg == '' ]]
+	then
+		echo -e '\e[36mPostgres will be installed\e[0m'
+		pg=true
+	else
+		pg=false
+		echo -e '\e[36mPostgres will not be installed\e[0m'
+	fi
+
+	echo 
+	echo -e '\e[36mPreparing to Install...\e[0m'
+	echo
+	echo -e '\e[36mUpdating your packages\e[0m'
+	sudo apt-get update
+
+
+
+	if $rb
+	then
+		echo -e '\e[36mInstalling Ruby...\e[0m'
+	fi
+
+	if true
+	then
+		echo -e '\e[36mInstalling Rails...\e[0m'
+	fi	
+
+	if $pg
+	then
+		echo -e '\e[36mInstalling Postgres...\e[0m'
+	fi
+
+elif [[ $1 == '' ]]
+then
+	echo 'Please run '\''jadan rails'\'' to install rails'
+else
+	echo "$1 is not recognised"
+fi
