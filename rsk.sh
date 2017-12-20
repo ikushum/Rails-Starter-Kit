@@ -45,6 +45,26 @@ if [[ $1 == 'rails' ]]
 		echo -e '\e[36mPostgres will not be installed\e[0m'
 	fi
 
+	read -p "Install Git ? (y/n) : " gt
+	if [[ $gt == 'Y' || $gt == 'y' || $gt == '' ]]
+	then
+		echo -e '\e[36mGit will be installed\e[0m'
+		gt=true
+	else
+		gt=false
+		echo -e '\e[36mGit will not be installed\e[0m'
+	fi	
+
+	read -p "Install Heroku CLI ? (y/n) : " heroku
+	if [[ $heroku == 'Y' || $heroku == 'y' || $heroku == '' ]]
+	then
+		echo -e '\e[36mHeroku CLI will be installed\e[0m'
+		heroku=true
+	else
+		heroku=false
+		echo -e '\e[36mHeroku CLI will not be installed\e[0m'
+	fi		
+
 	echo 
 	echo -e '\e[36mPreparing to Install...\e[0m'
 	echo
@@ -85,6 +105,18 @@ if [[ $1 == 'rails' ]]
 	then
 		echo -e '\e[36mInstalling Postgres...\e[0m'
 		sudo apt-get install postgresql postgresql-contrib libpq-dev pgadmin3 -y
+	fi
+
+	if $gt
+	then
+		echo -e '\e[36mInstalling Git...\e[0m'
+		apt-get install git
+	fi	
+
+	if $heroku
+	then
+		echo -e '\e[36mInstalling Heroku CLI...\e[0m'
+		wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
 	fi
 
 elif [[ $1 == '' ]]
