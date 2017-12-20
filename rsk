@@ -15,7 +15,7 @@ if [[ $1 == 'rails' ]]
 
 	sudo echo
 
-	read -p "Install Ruby ? (y/n) : " rb
+	read -p "Install Ruby ?* (y/n) : " rb
 	if [[ $rb == 'Y' || $rb == 'y' || $rb == '' ]]
 	then
 		rb=true
@@ -24,6 +24,16 @@ if [[ $1 == 'rails' ]]
 		rb=false
 		echo -e '\e[36mRuby will not be installed\e[0m'
 	fi
+
+	read -p "Install Node.js ?* (y/n) : " njs
+	if [[ $njs == 'Y' || $njs == 'y' || $njs == '' ]]
+	then
+		njs=true
+		echo -e '\e[36mNode.js will be installed\e[0m' >&2
+	else
+		njs=false
+		echo -e '\e[36mNode.js will not be installed\e[0m'
+	fi	
 
 	read -p "Install Postgres ? (y/n) : " pg
 	if [[ $pg == 'Y' || $pg == 'y' || $pg == '' ]]
@@ -39,28 +49,47 @@ if [[ $1 == 'rails' ]]
 	echo -e '\e[36mPreparing to Install...\e[0m'
 	echo
 	echo -e '\e[36mUpdating your packages\e[0m'
-	sudo apt-get update
+	sudo apt-get update -y
+	sudo apt-get --ignore-missing install build-essential patch ruby-dev zlib1g-dev liblzma-dev -y
 	echo -e '\e[36mInstalling Curl\e[0m'
-	sudo apt-get install curl
+	sudo apt-get install curl -y
 
 	if $rb
 	then
-		echo -e '\e[36mInstalling Ruby...\e[0m'
+		echo -e '\e[36mInstalling RVM (Ruby Version Manager)\e[0m'
+		gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+		curl -sSL https://get.rvm.io | bash -s stable
+		source ~/.rvm/scripts/rvm
+
+		echo "Installing Ruby"
+		rvm install 2.4.2
+		rvm use 2.4.2 --default
+		gem install bundler
 	fi
+
+	if $njs
+	then
+		echo -e '\e[36mInstalling Node.js\e[0m'
+		curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+		sudo apt-get install nodejs -y
+	fi	
 
 	if true
 	then
 		echo -e '\e[36mInstalling Rails...\e[0m'
+		gem install nokogiri
+		gem install rails
 	fi	
 
 	if $pg
 	then
 		echo -e '\e[36mInstalling Postgres...\e[0m'
+		sudo apt-get install postgresql postgresql-contrib libpq-dev pgadmin3 -y
 	fi
 
 elif [[ $1 == '' ]]
 then
-	echo 'Please run '\''jadan rails'\'' to install rails'
+	echo 'Please run '\''rsk rails'\'' to install rails'
 else
 	echo "$1 is not recognised"
 fi
