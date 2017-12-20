@@ -40,8 +40,8 @@ if [[ $1 == 'rails' ]]
 	echo
 	echo -e '\e[36mUpdating your packages\e[0m'
 	sudo apt-get update
-
-
+	echo -e '\e[36mInstalling Curl\e[0m'
+	sudo apt-get install curl
 
 	if $rb
 	then
